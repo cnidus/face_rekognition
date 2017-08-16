@@ -95,7 +95,7 @@ def lambda_handler(event, context):
                         if celeb['MatchConfidence'] >= 0.65:
                             print("Celeb: " + json.dumps(celeb))
                             #Create the Celeb top level entry
-                            if celebId in celebs:
+                            if not(celebId in celebs):
                                 print("New Celeb detected in frame " + str(frameNumber) + " with Confidence of " + str(celeb['MatchConfidence']))
                                 celebs[celebId] = {
                                     'Name': celeb['Name'],
