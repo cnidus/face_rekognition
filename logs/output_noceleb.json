@@ -1,0 +1,6 @@
+[root@ip-172-31-31-37 ~]# aws rekognition recognize-celebrities --image "S3Object={Bucket=cnidus-public,Name=noceleb.png}"
+{
+    "UnrecognizedFaces": [],
+    "CelebrityFaces": [],
+    "OrientationCorrection": "ROTATE_0"
+}

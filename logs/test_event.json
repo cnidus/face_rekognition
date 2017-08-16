@@ -1,0 +1,19 @@
+{ "Records": [
+  {
+    "EventVersion": "1.0",
+    "EventSubscriptionArn": "arn:aws:sns:us-east-1:366895301435:FDPinVideo-EtsNotifications-1BAXFJROAD0FX:a8929cfc-744d-4e26-9b14-e4dab24b6fa3",
+    "EventSource": "aws:sns",
+    "Sns": {
+      "SignatureVersion": "1",
+      "Timestamp": "2017-08-11T21:32:38.940Z",
+      "Signature": "ajrjmub8iRKsZIk90f3fsnof4ZxdGMApmVfC8vZzGK/rllFCE7qba+3HcQ/L7vtbP1COUBvm9Ju4URXlzEEgw2pmp3myQ8k6dbXGp+3YFBT5MCvvBeGnrGZJk+QYdH0kAPUKXCPEXiq93FuT2rt2hq3lwjJfybalgRVQMMLRpYlVKoJmJEncoyU5NCaULQXjXBD4H4TAYjQz7b03D5t+SoOouCukBbebk6JbcjxN5CbEM5w3gkMpFqcA4aqVvrcpQ8JHnq39YUgmqgotuw/lyGyUJAn2DiGulCV9HwX0BNcxduBXnTmd9gsKXNAZyOEThbSzj+jYOLtJ8Usj7S6xRQ==", "SigningCertUrl": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-433026a4050d206028891664da859041.pem", "MessageId": "a5ec74b2-a1c3-5907-addf-26ba8575c693",
+      "Message": "{\n  \"state\" : \"COMPLETED\",\n  \"version\" : \"2012-09-25\",\n  \"jobId\" : \"1502487128964-s9ruyp\",\n  \"pipelineId\" : \"1502485477597-ih5imp\",\n  \"input\" : {\n    \"key\" : \"input/The Italian Job (2003) - Trailer.mp4\"\n  },\n  \"inputCount\" : 1,\n  \"outputKeyPrefix\" : \"elastictranscoder/The Italian Job (2003) - Trailer.mp4/2017-08-11_21-32-08_\",\n  \"outputs\" : [ {\n    \"id\" : \"1\",\n    \"presetId\" : \"1502485480872-eluio2\",\n    \"key\" : \"transcoded-video.mp4\",\n    \"thumbnailPattern\" : \"thumbnail-{count}\",\n    \"status\" : \"Complete\",\n    \"duration\" : 164,\n    \"width\" : 320,\n    \"height\" : 138\n  } ]\n}",
+      "MessageAttributes": {},
+      "Type": "Notification",
+      "UnsubscribeUrl": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:366895301435:FDPinVideo-EtsNotifications-1BAXFJROAD0FX:a8929cfc-744d-4e26-9b14-e4dab24b6fa3",
+      "TopicArn": "arn:aws:sns:us-east-1:366895301435:FDPinVideo-EtsNotifications-1BAXFJROAD0FX",
+      "Subject": "Amazon Elastic Transcoder has finished transcoding job 1502487128964-s9ruyp."
+    }
+  }
+  ] 
+}

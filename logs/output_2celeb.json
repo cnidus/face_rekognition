@@ -1,0 +1,113 @@
+[root@ip-172-31-31-37 ~]# aws rekognition recognize-celebrities --image "S3Object={Bucket=cnidus-public,Name=2celeb.jpeg}"
+{
+    "UnrecognizedFaces": [],
+    "CelebrityFaces": [
+        {
+            "MatchConfidence": 67.0,
+            "Face": {
+                "BoundingBox": {
+                    "Width": 0.1922222226858139,
+                    "Top": 0.13333334028720856,
+                    "Left": 0.648888885974884,
+                    "Height": 0.3844444453716278
+                },
+                "Confidence": 99.9937744140625,
+                "Pose": {
+                    "Yaw": 2.2632546424865723,
+                    "Roll": -3.4978649616241455,
+                    "Pitch": -0.17877277731895447
+                },
+                "Quality": {
+                    "Sharpness": 99.68138885498047,
+                    "Brightness": 34.09063720703125
+                },
+                "Landmarks": [
+                    {
+                        "Y": 0.30532535910606384,
+                        "X": 0.7109101414680481,
+                        "Type": "eyeLeft"
+                    },
+                    {
+                        "Y": 0.2991429269313812,
+                        "X": 0.7747927308082581,
+                        "Type": "eyeRight"
+                    },
+                    {
+                        "Y": 0.3656975030899048,
+                        "X": 0.744158923625946,
+                        "Type": "nose"
+                    },
+                    {
+                        "Y": 0.4218606948852539,
+                        "X": 0.7178178429603577,
+                        "Type": "mouthLeft"
+                    },
+                    {
+                        "Y": 0.4231055974960327,
+                        "X": 0.7706993222236633,
+                        "Type": "mouthRight"
+                    }
+                ]
+            },
+            "Name": "Jack Nicholson",
+            "Urls": [
+                "www.imdb.com/name/nm0000197"
+            ],
+            "Id": "CS3Q9"
+        },
+        {
+            "MatchConfidence": 96.0,
+            "Face": {
+                "BoundingBox": {
+                    "Width": 0.18222221732139587,
+                    "Top": 0.24666666984558105,
+                    "Left": 0.0833333358168602,
+                    "Height": 0.36222222447395325
+                },
+                "Confidence": 99.99372100830078,
+                "Pose": {
+                    "Yaw": -0.4386110305786133,
+                    "Roll": -7.120234966278076,
+                    "Pitch": 2.6626358032226562
+                },
+                "Quality": {
+                    "Sharpness": 98.55191040039062,
+                    "Brightness": 28.00009536743164
+                },
+                "Landmarks": [
+                    {
+                        "Y": 0.4090627431869507,
+                        "X": 0.13197903335094452,
+                        "Type": "eyeLeft"
+                    },
+                    {
+                        "Y": 0.393393874168396,
+                        "X": 0.20288798213005066,
+                        "Type": "eyeRight"
+                    },
+                    {
+                        "Y": 0.46796715259552,
+                        "X": 0.17170566320419312,
+                        "Type": "nose"
+                    },
+                    {
+                        "Y": 0.5441619753837585,
+                        "X": 0.15468329191207886,
+                        "Type": "mouthLeft"
+                    },
+                    {
+                        "Y": 0.5361746549606323,
+                        "X": 0.2001817375421524,
+                        "Type": "mouthRight"
+                    }
+                ]
+            },
+            "Name": "Leonardo DiCaprio",
+            "Urls": [
+                "www.imdb.com/name/nm0000138"
+            ],
+            "Id": "2kH5YL3L"
+        }
+    ],
+    "OrientationCorrection": "ROTATE_0"
+}
