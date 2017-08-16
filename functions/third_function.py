@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw
 from StringIO import StringIO
 
 
-CONCURRENT_THREADS = 50
+CONCURRENT_THREADS = 1
 
 
 def lambda_handler(event, context):
@@ -24,7 +24,6 @@ def lambda_handler(event, context):
     rekognition = boto3.client('rekognition', region_name=os.environ['AWS_REGION'])
     s3 = boto3.client('s3', region_name=os.environ['AWS_REGION'])
 
-    faces = {}
     celebs = {}
 
     # Create a new collection in Amazon Rekognition. I use the ID of the Elastic
@@ -67,7 +66,7 @@ def lambda_handler(event, context):
         print(e)
         raise(e)
 
-    #Find celebrities worker
+    #Create the findCelebsQueue and find_celebs_workers
     findCelebsQueue = Queue()
 
     def find_celebs_worker():
@@ -88,15 +87,32 @@ def lambda_handler(event, context):
                     #ExternalImageId=str(frameNumber)
                 )
 
-                for celeb in response['CelebrityFaces']:
-                    celebId = celeb['Id']
-                    celebs[celebId] = {
-                        'FrameNumber': frameNumber,
-                        'BoundingBox': celeb['Face']['BoundingBox']
-                        'Name': celeb['Name']
-                        'URLs': celeb['URLs']
-                        'MatchConfidence': celeb['MatchConfidence']
-                    }
+                Celebrities = response['CelebrityFaces']
+                if Celebrities:
+                    for celeb in Celebrities:
+                        celebId = celeb['Id']
+                        print("celeb: " + celebId + " in frame: " + str(frameNumber) + " MatchConfidence: " + str(celeb['MatchConfidence']))
+                        if celeb['MatchConfidence'] >= 0.65:
+                            print("Celeb: " + json.dumps(celeb))
+                            #Create the Celeb top level entry
+                            if not celebId in celebs.keys():
+                                print("New Celeb detected in frame " + str(frameNumber) + " with Confidence of " + str(celeb['MatchConfidence']))
+                                celebs[celebId] = {
+                                    'Name': celeb['Name'],
+                                    'Urls': celeb['Urls'],
+                                    'Faces': {}
+                                }
+                            #Transform the detected face object
+                            celebFace = {
+                                    'FrameNumber': frameNumber,
+                                    'MatchConfidence': celeb['MatchConfidence'],
+                                    'BoundingBox': celeb['Face']['BoundingBox'],
+                                    'Confidence': celeb['Face']['Confidence']
+                            }
+                            print(celebFace)
+                            #Add the detected face to the 'celebs' array.
+                            celebs[celebId]['Faces'].append(celebFace)
+#                            print("Celeb[celebId]: " + json.dumps(celeb[celebId]))
 
                 endTime = datetime.now()
                 delta = int((endTime - startTime).total_seconds() * 1000)
@@ -104,10 +120,14 @@ def lambda_handler(event, context):
                     timeToWait = float(1000 - delta)/1000
                     time.sleep(timeToWait)
 
+                print("find_celebs_worker " + key + " completed successfully")
+
             # I put the key back in the queue if the IndexFaces operation
             # failed
-            except:
-                findCelebsQueue.put(key)
+            except Exception as e:
+                print('Exception: ' + key)
+                print(e)
+#                findCelebsQueue.put(key)
 
             findCelebsQueue.task_done()
 
@@ -122,89 +142,14 @@ def lambda_handler(event, context):
     findCelebsQueue.join()
     time.sleep(2)
     print('FindCelebs operation completed')
-
-
-    # Celebrity sorting etc
-    # Sort the list of Celebrity IDs in the order of which they appear in the video.
-#    def getKey(item):
-#        return item[1]
-#    celebsFrameNumber = {k: v['FrameNumber'] for k, v in celebs.items()}
-#    celebIdsSorted = [i[0] for i in sorted(celebsFrameNumber.items(), key=getKey)]
-
-#Trying to refactor this part....############
-#    def propagate_celeb_id(celebId):
-#        for matchingId in celebs[celebId]['MatchingFaces']:
-#            if not 'celebId' in celebs[matchingId]:
-#
-#                numberMatchingLoops = 0
-#                for matchingId2 in faces[matchingId]['MatchingFaces']:
-#                    if faceId in faces[matchingId2]['MatchingFaces']:
-#                        numberMatchingLoops = numberMatchingLoops + 1
-#
-#                # To avoid false positives, the propagation from faceA to faceB
-#                # happens only if there are at least two faces matching faceB
-#                # that also match faceA
-#                if numberMatchingLoops >= 2:
-#                    celebId = celebs[faceId]['PersonId']
-#                    faces[matchingId]['PersonId'] = personId
-#                    propagate_person_id(matchingId)
-#
-#    celebId = 0
-#    for faceId in faceIdsSorted:
-#        if not 'PersonId' in faces[faceId]:
-#            personId = personId + 1
-#            faces[faceId]['PersonId'] = personId
-#            propagate_person_id(faceId)
-######################
-
-#    print('Unique celebs identified')
-
-
-    # Retain only the people that appear in at least 3 consecutive frames
-    # and create the JSON output.
-#    people = []
-#    maxPersonId = personId
-#    targetNumberConsecutiveFrames = 3
-#
-#    for personId in range(1, maxPersonId + 1):
-#        frames = []
-#        previousFrameNumber = None
-#        currentNumberConsecutiveFrames = 0
-#        maxNumberConsecutiveFrames = 0
-
-#        for faceId in faceIdsSorted:
-#            if faces[faceId]['PersonId'] == personId:
-#
-#                frameNumber = faces[faceId]['FrameNumber']
-#                frameTimePosition = '{}:{:02d}:{:02d}'.format(
-#                    frameNumber / 3600,
-#                    (frameNumber - frameNumber / 3600 * 3600) / 60,
-#                    frameNumber % 60
-#                )
-
-#                frames.append({
-#                    'FrameNumber': faces[faceId]['FrameNumber'],
-#                    'FrameTimePosition': frameTimePosition,
-#                    'BoundingBox': faces[faceId]['BoundingBox']
-#                })
-
-#                if previousFrameNumber == frameNumber - 1:
-#                    currentNumberConsecutiveFrames += 1
-#                    maxNumberConsecutiveFrames = max(maxNumberConsecutiveFrames, currentNumberConsecutiveFrames)
-#                else:
-#                    currentNumberConsecutiveFrames = 1
-#
-#                previousFrameNumber = frameNumber
-#
-#        if maxNumberConsecutiveFrames >= targetNumberConsecutiveFrames
-#            people.append({'Frames': frames})
-
+    print(json.dumps(celebs))
+    celeb_json = {}
     celeb_json = {'Celebrities': celebs}
 
     # Upload the JSON result into the S3 bucket
     try:
         s3.put_object(
-            Body=json.dumps(output_json, indent=4).encode(),
+            Body=json.dumps(celeb_json, indent=4).encode(),
             Bucket=os.environ['Bucket'],
             Key=sns_msg['outputKeyPrefix'].replace('elastictranscoder/', 'output/celeb_')[:-1] + '.json'
         )
