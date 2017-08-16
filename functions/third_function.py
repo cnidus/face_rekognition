@@ -95,7 +95,7 @@ def lambda_handler(event, context):
                         if celeb['MatchConfidence'] >= 0.65:
                             print("Celeb: " + json.dumps(celeb))
                             #Create the Celeb top level entry
-                            if not celebId in celebs.keys():
+                            if celebId in celebs:
                                 print("New Celeb detected in frame " + str(frameNumber) + " with Confidence of " + str(celeb['MatchConfidence']))
                                 celebs[celebId] = {
                                     'Name': celeb['Name'],
@@ -109,10 +109,12 @@ def lambda_handler(event, context):
                                     'BoundingBox': celeb['Face']['BoundingBox'],
                                     'Confidence': celeb['Face']['Confidence']
                             }
-                            print(celebFace)
+#                            print(celebFace)
                             #Add the detected face to the 'celebs' array.
-                            celebs[celebId]['Faces'].append(celebFace)
-#                            print("Celeb[celebId]: " + json.dumps(celeb[celebId]))
+                            try:
+                                celebs[celebId]['Faces'].append(celebFace)
+                            except:
+                                print("Failed to append face: " + json.dumps(celebFace))
 
                 endTime = datetime.now()
                 delta = int((endTime - startTime).total_seconds() * 1000)
