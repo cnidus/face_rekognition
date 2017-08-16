@@ -112,7 +112,7 @@ def lambda_handler(event, context):
 #                            print(celebFace)
                             #Add the detected face to the 'celebs' array.
                             try:
-                                celebs[celebId]['Faces'].update(celebFace)
+                                celebs[celebId]['Faces'][frameNumber] = celebFace
                             except Exception as e:
                                 print("Failed to append face: " + json.dumps(celebFace))
                                 print(e)
